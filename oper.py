@@ -24,9 +24,9 @@ class oper:
             coeff = 0
         else:
             # as per derivation
-            coeff = sm.derivative(self.func, 0, dx=0.0125, n=p, order=2*p+1)/sp.factorial(p,exact=False)
-            coeff = coeff*math.sqrt(sp.factorial(p, exact=False)*sp.factorial(q, exact=False))
-            coeff = coeff/(math.sqrt(sp.factorial(self.m, exact=False)*sp.factorial(self.n, exact=False)))       
+            coeff = sm.derivative(self.func, 0, dx=0.0125, n=p, order=2*p+1)/sp.factorial(p,exact=True)
+            coeff = coeff*math.sqrt(sp.factorial(p, exact=True)*sp.factorial(q, exact=True))
+            coeff = coeff/(math.sqrt(sp.factorial(self.m, exact=True)*sp.factorial(self.n, exact=True)))       
         return coeff
         
     def build(self):

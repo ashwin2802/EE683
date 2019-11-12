@@ -1,4 +1,5 @@
 import demos
+import plot
 import numpy as np
 import base
 import sys
@@ -24,9 +25,19 @@ def op_demo():
     else:
         operator = demos.make_operator()
         B = operator.build()
-        psi_in = demos.make_input(operator, T)
+        dist1, dist2, psi_in = demos.make_input(operator, T)
         psi_out = np.matmul(B, psi_in)
         refl, trans = demos.measure(operator, psi_out)
+        print("Plotting distributions...")
+        plot.simul_bar_plot([dist1, dist2, refl, trans], \
+            ["Input 1", "Input 2", "Reflected", "Transmitted"])
+        flag = input("Show histograms? (y/n): ")
+        while(flag != 'n' and flag != 'y'):
+            print("Please enter y or n.")
+            flag = input("Show histograms? (y/n): ")
+        if(flag == 'y'):
+            plot.simul_hist_plot([dist1, dist2, refl, trans], \
+                ["Input 1", "Input 2", "Reflected", "Transmitted"])
         demos.correlate(refl, trans)
         print("End of demo.")
         present()

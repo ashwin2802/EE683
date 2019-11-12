@@ -23,7 +23,7 @@ def show_hist(dist, label, type='u', compare=False):
             t2 = np.arange(0,10,0.01)
             plt.hist(np.exp(-t2), bins = 100, density=True)
         plt.subplot(212)
-    plt.hist(dist, bins = 100, density=True)
+    plt.hist(dist, bins = int(np.sqrt(len(dist))), density=True)
     plt.show()
 
 def time_plot(dist, label, shift=0):
@@ -48,7 +48,7 @@ def simul_hist_plot(dists, labels):
     plt.figure()
     for i in range(len(dists)):
         plt.subplot(code + i)
-        plt.hist(dists[i], bins=int(np.sqrt(len(dists[i]))), density=False)
+        plt.hist(dists[i], bins=int(np.sqrt(len(dists[i]))), density=True)
         plt.xlabel(labels[i])
     plt.show()
     

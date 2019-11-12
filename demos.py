@@ -21,12 +21,8 @@ def gen_dist(T):
         dist = base.create_exp_dist(T)
     elif(distr == 3):
         dist = base.create_log_dist(T)
-    flag = input("Digitize distribution? (y/n): ")
-    while(flag != 'n' and flag != 'y'):
-        print("Please enter y or n.")
-        flag = input("Digitize distribution? (y/n): ")
-    if(flag == 'y'):
-        base.digitize(dist)
+    print("Digitizing distribution...")
+    base.digitize(dist)
     return dist
 
 def plot_dist(dist):
@@ -47,14 +43,7 @@ def beam_split(dist):
         R = float(base.get("Enter reflectance for splitter: ", \
             "Reflectance must be between 0 and 1. Please try again."))
     print("Splitting photons...")
-    refl, trans = base.split(dist, thresh=R, bin=False)
-    flag = input("Digitize outputs? (y/n): ")
-    while(flag != 'n' and flag != 'y'):
-        print("Please enter y or n.")
-        flag = input("Digitize outputs? (y/n): ")
-    if(flag == 'y'):
-        base.digitize(refl)
-        base.digitize(trans)
+    refl, trans = base.split(dist, thresh=R)
     print("Plotting distributions...")
     plot.simul_bar_plot([dist, refl, trans], \
             ["Input", "Reflected", "Transmitted"])
@@ -70,13 +59,15 @@ def beam_split(dist):
 def correlate(refl, trans):
     print("Correlating outputs...")
     corr = base.correlate(refl, trans)
-    print("Correlation at 0: {}".format(corr[int(len(refl)/2)]))
-    if(corr[int(len(refl)/2)] == 0):
+    print("Correlation at 0: {}".format(corr[int(len(refl))]))
+    if(corr[int(len(refl))] == 0):
         print("Photons are antibunched.")
     else:
         print("Photons are bunched.")
     print("Plotting correlation...")
-    plot.time_plot(corr, "Correlation", int(len(refl)/2))
+    plot.time_plot(corr, "Correlation", len(refl))
+    # exp = base.expected_corr(len(refl))
+    # plot.simul_bar_plot([corr,exp], ["Correlation","Expected"])
 
 def make_operator():
     R = float(base.get("Enter reflectance for splitter: ", \
@@ -112,13 +103,16 @@ def make_input(op, T):
         dist1 = gen_dist(T)
         base.digitize(dist1)
         n = int(base.get("Enter state number: ", "Please enter a natural number."))
-        dist1 = dist1*n
+        for i in range(len(dist1)):
+            dist1[i] = dist1[i]*n
         dist2 = np.zeros(T)
     elif(inp == 4):
         dist1 = base.create_coh_state(T, op.N)
         dist2 = np.zeros(T)
-    return op.decomp(dist1, dist2)
+    print("Digitizing outputs...")
+    return dist1, dist2, op.decomp(dist1, dist2)
 
 def measure(op, out):
     print("Observing the wavefunction...")
-    return op.measure(out)
+    refl, trans = op.measure(out)
+    return refl, trans

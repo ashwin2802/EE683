@@ -23,7 +23,7 @@ def create_log_dist(n):
     # creates an n-length logarithmic distribution of values between 0 and 1
     dist = []
     for i in range(n):
-        prob = 1 - np.log(np.e - i*(np.e-1)/(n-1))
+        prob = 1 - np.log(1 + i*(np.e-1)/(n-1))
         toss = np.random.choice([0,1], p=[1-prob, prob])
         if(toss):
             dist.append(np.random.uniform(0.5, 1))
@@ -70,25 +70,20 @@ def digitize(dist, thresh=0.5):
         else:
             dist[i] = 1
 
-def split(dist, thresh=0.5, bin=True):
+def split(dist, thresh=0.5):
     # actual beam splitter - splits an array into 2 arrays
     # bin: Specifies if output must be digitized
     # only for single-mode photon source - use operator for higher states
     # detector assumed to be at output terminal not in front of source
     r = []
     t = []
+    toss = np.random.uniform(0,1,size=len(dist))
     for i in range(len(dist)):
-        if(dist[i] < thresh): # did not detect - went to other output
-            if(bin):
-                r.append(1)
-            else:
-                r.append(dist[i])
+        if(toss[i] < thresh):
+            r.append(dist[i])
             t.append(0)
-        else: # detected at this output
-            if(bin):
-                t.append(1)
-            else:
-                t.append(dist[i])
+        else:
+            t.append(dist[i])
             r.append(0)
     return r, t
 
@@ -97,7 +92,7 @@ def correlate(dist1, dist2):
     g = []
     m1 = np.mean(dist1) # first order 
     m2 = np.mean(dist2) # time average
-    for t in range(int(-len(dist2)/2), int(len(dist2)/2)):
+    for t in range(-len(dist2),len(dist2)):
         conv = 0
         for i in range(len(dist1)):
             # second order
