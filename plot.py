@@ -28,6 +28,7 @@ def show_hist(dist, label, type='u', compare=False):
 
 def time_plot(dist, label, shift=0):
     # plot distribution with respect to time
+    # shift: specifies time axis as [-shift, T-shift]
     plt.xlabel(label)
     plt.bar(range(-shift, len(dist)-shift), dist)
     plt.show()

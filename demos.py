@@ -60,14 +60,8 @@ def correlate(refl, trans):
     print("Correlating outputs...")
     corr = base.correlate(refl, trans)
     print("Correlation at 0: {}".format(corr[int(len(refl))]))
-    if(corr[int(len(refl))] == 0):
-        print("Photons are antibunched.")
-    else:
-        print("Photons are bunched.")
     print("Plotting correlation...")
     plot.time_plot(corr, "Correlation", len(refl))
-    # exp = base.expected_corr(len(refl))
-    # plot.simul_bar_plot([corr,exp], ["Correlation","Expected"])
 
 def make_operator():
     R = float(base.get("Enter reflectance for splitter: ", \
@@ -76,7 +70,7 @@ def make_operator():
         print("Reflectance must be between 0 and 1. Please try again.")
         R = float(base.get("Enter reflectance for splitter: ", \
             "Reflectance must be between 0 and 1. Please try again."))
-    N = int(base.get("Enter max allowed state: ", "Please enter a natural number."))
+    N = int(base.get("Enter max allowed eigenstate: ", "Please enter a natural number."))
     return oper.oper(R, N+1)
 
 def make_input(op, T):
